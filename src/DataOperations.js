@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./DataOperations.css"; // For styling
 
@@ -9,13 +9,8 @@ const DataOperations = ({ tableName }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-    fetchTableAttributes();
-  }, [tableName]);
-
   // Function to fetch all data
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
       const result = await axios.get(
@@ -27,10 +22,10 @@ const DataOperations = ({ tableName }) => {
       console.error("Failed to fetch data:", error);
       setIsLoading(false);
     }
-  };
+  }, [tableName]);
 
   // Function to fetch table attributes
-  const fetchTableAttributes = async () => {
+  const fetchTableAttributes = useCallback(async () => {
     try {
       const result = await axios.get(
         `https://vahan-api.onrender.com/describeTable/${tableName}`
@@ -39,7 +34,12 @@ const DataOperations = ({ tableName }) => {
     } catch (error) {
       console.error("Failed to fetch table attributes:", error);
     }
-  };
+  }, [tableName]);
+
+  useEffect(() => {
+    fetchData();
+    fetchTableAttributes();
+  }, [tableName, fetchData, fetchTableAttributes]);
 
   // Function to add new data
   const handleAdd = async () => {
