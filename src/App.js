@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import EntityCreator from "./EntityCreator";
+import DataOperations from "./DataOperations";
+import "./App.css"; // Ensure the CSS is imported
 
 function App() {
+  const [tableName, setTableName] = useState("");
+
+  useEffect(() => {
+    // Reset table name if needed based on certain conditions or actions
+  }, [tableName]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="form-container">
+        <EntityCreator setTableName={setTableName} />
+      </div>
+      <div className="data-operations">
+        {tableName ? (
+          <DataOperations tableName={tableName} />
+        ) : (
+          <p>
+            No table is created yet. Please create a table to perform CRUD
+            operations.
+          </p>
+        )}
+      </div>
     </div>
   );
 }
